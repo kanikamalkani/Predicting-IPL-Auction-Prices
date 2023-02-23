@@ -1,0 +1,382 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+```{r}
+
+
+ipl1 = read.csv("C:/Users/kanik/Downloads/ipl.csv")
+
+
+dim(ipl1)
+summary(ipl1)
+head(ipl1)
+str(ipl1)
+View(ipl1)
+sum(is.na(ipl1))
+```
+```{r}
+install.packages("Hmisc")
+library(Hmisc)
+
+apply(ipl1,2, function(col)sum(is.na(col))/length(col))
+```
+
+
+## Creating the box plots for independent variables to check for the outliers.
+
+```{r}
+boxplot(ipl1$Set.No., ylab = "Set.No.")
+length(boxplot.stats(ipl1$Set.No.)$out)
+
+boxplot(ipl1$Set.Name, ylab = "Set.Name.")
+length(boxplot.stats(ipl1$Set.Name)$out)
+
+boxplot(ipl1$Country, ylab = "Countries")
+length(boxplot.stats(ipl1$Country)$out)
+
+boxplot(ipl1$Age, ylab = "Age")
+length(boxplot.stats(ipl1$Age)$out)
+
+boxplot(ipl1$Specialism, ylab = "Specialism")
+length(boxplot.stats(ipl1$Specialism)$out)
+
+boxplot(ipl1$Batting, ylab = "Batting")
+length(boxplot.stats(ipl1$Batting)$out)
+
+boxplot(ipl1$Bowling, ylab = "Bowling")
+length(boxplot.stats(ipl1$Bowling)$out)
+
+boxplot(ipl1$IPL.Matches.Played., ylab = "IPL.Matches.Played.")
+length(boxplot.stats(ipl1$IPL.Matches.Played.)$out)
+
+
+boxplot(ipl1$C.U.A , ylab = "Capping")
+length(boxplot.stats(ipl1$C.U.A )$out)
+
+boxplot(ipl1$Base.Price, ylab = "Base.Price")
+length(boxplot.stats(ipl1$Base.Price)$out)
+
+boxplot(ipl1$Sold.Price..in.CR., ylab = "Sold.Price.in.CR.")
+length(boxplot.stats(ipl1$Sold.Price..in.CR.)$out)
+
+boxplot(ipl1$New.Franchise, ylab = "New Franchise")
+length(boxplot.stats(ipl1$New.Franchise)$out)
+
+boxplot(ipl1$Runs, ylab = "Runs")
+length(boxplot.stats(ipl1$Runs)$out)
+
+
+boxplot(ipl1$Strike.Rate, ylab = "Strike.Rate")
+length(boxplot.stats(ipl1$Strike.Rate)$out)
+
+
+boxplot(ipl1$Wickets, ylab = "Wickets")
+length(boxplot.stats(ipl1$Wickets)$out)
+
+
+boxplot(ipl1$Economy, ylab = "Economy")
+length(boxplot.stats(ipl1$Economy)$out)
+
+boxplot(ipl1$Star.Variable, ylab = "Star Variable")
+length(boxplot.stats(ipl1$Star.Variable)$out)
+
+
+```
+
+## EDA
+
+```{r}
+library(skimr)
+skim(ipl1)
+```
+
+## 2).Testing the assumptions
+
+```{r}
+y =ipl1$Sold.Price..in.CR.
+
+
+plot(y ~ ipl1$Set.No., data=ipl1) 
+abline(lm(y ~ ipl1$Set.No.), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$Set.Name, data=ipl1) 
+abline(lm(y ~ ipl1$Set.Name), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$Country, data=ipl1) 
+abline(lm(y ~ ipl1$Country), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$Age, data=ipl1) 
+abline(lm(y ~ ipl1$Age), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$Specialism, data=ipl1) 
+abline(lm(y ~ ipl1$Specialism), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$Batting, data=ipl1) 
+abline(lm(y ~ ipl1$Batting), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$Bowling, data=ipl1) 
+abline(lm(y ~ ipl1$Bowling), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$IPL.Matches.Played., data=ipl1) 
+abline(lm(y ~ ipl1$IPL.Matches.Played.), col = "orange", lwd = 3)
+
+
+plot(y ~ ipl1$C.U.A, data=ipl1) 
+abline(lm(y ~ ipl1$C.U.A), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$Base.Price, data=ipl1) 
+abline(lm(y ~ ipl1$Base.Price), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$New.Franchise, data=ipl1) 
+abline(lm(y ~ ipl1$New.Franchise), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$Runs, data=ipl1) 
+abline(lm(y ~ ipl1$Runs), col = "orange", lwd = 3)
+
+plot(y ~ipl1$Strike.Rate, data=ipl1) 
+abline(lm(y ~ ipl1$Strike.Rate), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$Wickets, data=ipl1) 
+abline(lm(y ~ ipl1$Wickets), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$Economy, data=ipl1) 
+abline(lm(y ~ ipl1$Economy), col = "orange", lwd = 3)
+
+plot(y ~ ipl1$Star.Variable, data=ipl1) 
+abline(lm(y ~ ipl1$Star.Variable), col = "orange", lwd = 3)
+
+
+
+```
+
+2). INDEPENDENCE OF OBSERVATIONS
+
+```{r}
+head(ipl1)
+ipl_corr_column = ipl1[,c(2,3,5,6,7,8,9,10,13,14,15,16,17,18,19,20,21)]
+head(ipl_corr_column)
+class(ipl_corr_column)
+
+res <- cor(ipl_corr_column)
+round(res, 2)
+
+# Correlation plot
+
+install.packages("corrplot")
+library(corrplot)
+corrplot(res, type = "lower", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+corrplot(res, method = 'number', tl.cex = 0.0001)
+
+
+
+
+```
+
+3). NORMALITY
+
+```{r}
+library(ggplot2)
+```
+
+
+```{r}
+ggplot(ipl1$Sold.Price..in.CR.)
+
+hist(ipl1$Sold.Price..in.CR.)
+
+install.packages("moments")
+library(moments)
+skewness(ipl1$Sold.Price..in.CR.)
+# Our independent variable is positively skewed-"  1.454367"
+
+
+## Shapiro test -  to check the normality of the dependent variable
+shapiro.test(ipl1$Sold.Price..in.CR.)
+```
+
+Now applying log transformation on our independent variable to make it normal.
+
+```{r}
+# Log transformation
+
+ipl1$Sold.Price..in.CR. <- log(ipl1$Sold.Price..in.CR.)
+ipl1$Sold.Price..in.CR.
+hist(ipl1$Sold.Price..in.CR.)
+skewness(ipl1$Sold.Price..in.CR.)
+#skewness(a, na.rm = TRUE)
+
+shapiro.test(ipl1$Sold.Price..in.CR.)
+
+```
+
+```{r}
+
+```
+
+
+```{r}
+install.packages("DataExplorer")
+library(DataExplorer)
+DataExplorer::create_report(ipl1)
+```
+
+
+3). MULTICOLLINEARITY OF THE DATA
+
+```{r}
+library(tidyverse)
+library(caret)
+#car::vif(design2)
+
+attach(ipl1)
+library(mctest)
+design2 = cbind(Set.No.,Set.Name,Country, Age,Specialism, Batting, Bowling,C.U.A,New.Franchise, IPL.Matches.Played.,Base.Price,Runs,Strike.Rate,Wickets,Economy,Star.Variable)
+design3=as.data.frame(design2)
+mctest(design3,Sold.Price..in.CR.,type="i",method = "VIF")
+
+
+
+```
+
+```{r}
+design5 = subset(design3, select = -IPL.Matches.Played.)
+design5
+
+mctest(design5,Sold.Price..in.CR.,type="i",method = "VIF")
+
+
+
+```
+
+
+
+
+```{r}
+#a = ipl1[,c(2,3,5,6,7,8,9,10,13,14,16,17,18,19,20,21)]
+#cor(a)                 
+#round(cor(a), digits = 2) 
+#install.packages("olsrr")
+#library(olsrr)
+a_model<- lm(Sold.Price..in.CR.~Set.No.+Set.Name+Country+ Age+Specialism+ Batting+ Bowling+ X2021.Team+C.U.A+New.Franchise+ IPL.Matches.Played.+Base.Price,Runs+Strike.Rate+Wickets+Economy+Star.Variable, data = ipl1)
+
+
+ols_coll_diag(a_model)
+                 
+```
+
+
+## FITTING OF THE MODEL
+
+```{r}
+
+reg.eq<-lm(formula =Sold.Price..in.CR.~Set.Name+Country+ Age+ Batting+ Bowling+ X2021.Team+C.U.A+New.Franchise+ IPL.Matches.Played.+Base.Price+Runs+Strike.Rate+Wickets+Economy+Star.Variable,data=ipl1)
+summary(reg.eq)
+plot(reg.eq)
+```
+### AFTER VIF
+```{r}
+reg.eq11<-lm(formula =Sold.Price..in.CR.~Set.No.+Set.Name+Country+ Age+Specialism+ Batting+ Bowling+ X2021.Team+C.U.A+New.Franchise+Base.Price+Runs+Strike.Rate+Wickets+Economy+Star.Variable,data=ipl1)
+summary(reg.eq11)
+plot(reg.eq11)
+
+```
+
+
+```{r}
+install.packages("MASS")
+library(MASS)
+bc1 = boxcox(reg.eq11, lambda = seq(-3,3))
+
+best.lam1 = bc1$x[which(bc1$y==max(bc1$y))]
+
+reg.eq12<-lm(formula =(Sold.Price..in.CR.)^best.lam1~Set.No.+Set.Name+Country+ Age+Specialism+ Batting+ Bowling+ X2021.Team+C.U.A+New.Franchise+Base.Price+Runs+Strike.Rate+Wickets+Economy+Star.Variable,data=ipl1)
+summary(reg.eq12)
+plot(reg.eq12)
+```
+
+
+
+
+## Box-cox transformation
+```{r}
+install.packages("MASS")
+library(MASS)
+bc = boxcox(reg.eq, lambda = seq(-3,3))
+
+best.lam = bc$x[which(bc$y==max(bc$y))]
+
+reg.eq1<-lm(formula =(Sold.Price..in.CR.)^best.lam~Set.No.+Set.Name+Country+ Age+Specialism+ Batting+ Bowling+ X2021.Team+C.U.A+New.Franchise+Base.Price+Runs+Strike.Rate+Wickets+Economy+Star.Variable,data=ipl1)
+summary(reg.eq1)
+plot(reg.eq1)
+```
+
+
+
+```{r}
+#durbin watson test to check auto-correlation
+install.packages("lmtest")
+library(lmtest)
+
+
+dwtest(reg.eq) 
+```
+
+
+```{r}
+#to test the assumption of homoscedasticity
+bptest(reg.eq)
+```
+
+```{r}
+
+library(tidyverse)
+library(caret)
+install.packages("leaps")
+library(leaps)
+step.model<-stepAIC(reg.eq1, direction = "both", trace= FALSE)
+summary(step.model)
+models <- regsubsets ((Sold.Price..in.CR.)~., data=ipl1, nvmax = 17, method ="seqrep")
+summary(models)
+set.seed (123)
+train.control <- traincontrol (method="cv",number = 10)
+step.model <- train((Sold.Price.. in.CR.)~., data-ipl1,method = "leapseg", tuneGrid -data. frame (nvmax = 1:17), trControl= train. control)
+
+
+library(tidyverse)
+library(caret)
+library(leaps)
+step.model <- stepAIC(reg.eq1, direction = "both", trace = FALSE)
+summary(step.model)
+models <- regsubsets((Sold.Price..in.CR.)~.,data=ipl1, nvmax = 17,method = "seqrep")
+summary(models)
+set.seed(123)
+# Set up repeated k-fold cross-validation
+train.control <- trainControl(method = "cv", number = 10)
+step.model <- train((Sold.Price..in.CR.)~.,data=ipl1,method = "leapSeq", tuneGrid =data.frame(nvmax = 1:17), trControl= train.control)
+print(step.model$results)
+
+
+
+
+```
+```{r}
+ reg.eq11<-lm(formula =Sold.Price..in.CR.~Set.No.+Set.Name+Country+ Age+Specialism+ Batting+ Bowling+ X2021.Team+C.U.A+New.Franchise+Base.Price,Runs+Strike.Rate+Wickets+Economy+Star.Variable,data=ipl1)
+summary(reg.eq11)
+plot(reg.eq11)
+install.packages("MASS")
+library(MASS)
+bc1 = boxcox(reg.eq11, lambda = seq(-3,3))
+
+best.lam1 = bc1$x[which(bc1$y==max(bc1$y))]
+
+reg.eq12<-lm(formula =(Sold.Price..in.CR.)^best.lam1~Set.No.+Set.Name+Country+ Age+Specialism+ Batting+ Bowling+ X2021.Team+C.U.A+New.Franchise+Base.Price,Runs+Strike.Rate+Wickets+Economy+Star.Variable,data=ipl1)
+summary(reg.eq12)
+plot(reg.eq12)
+```
+
